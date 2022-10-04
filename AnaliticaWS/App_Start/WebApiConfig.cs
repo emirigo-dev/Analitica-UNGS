@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AnaliticaWS.Controllers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -15,6 +16,7 @@ namespace AnaliticaWS
             config.EnableCors(cors);
             // Rutas de Web API
             config.MapHttpAttributeRoutes();
+            config.MessageHandlers.Add(new TokenValidationHandler());
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

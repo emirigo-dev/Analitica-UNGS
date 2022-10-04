@@ -9,7 +9,8 @@ using System.Web.Http;
 
 
 namespace AnaliticaWS.Controllers
-{   
+{
+    [Authorize]
     public class PromedioInstitucionController : ApiController
     {
         // GET api/<controller>
