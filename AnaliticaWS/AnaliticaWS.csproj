@@ -116,10 +116,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Promedio.cs" />
     <Compile Include="Models\LoginDTO.cs" />
     <Compile Include="Models\PromedioMateria.cs" />
     <Compile Include="Models\PromedioInstitucion.cs" />
     <Compile Include="Models\PromedioNivel.cs" />
+    <Compile Include="Models\PromedioWithParameters.cs" />
     <Compile Include="Models\ResponseToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

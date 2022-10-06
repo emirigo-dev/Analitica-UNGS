@@ -20,7 +20,7 @@ namespace AnaliticaWS.Controllers
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);
 
-            bool isCredentialValid = (loginDTO.Password == "S1@2dS82OjZz");
+            bool isCredentialValid = (loginDTO.Username == "Boletin" && loginDTO.Password == "S1@2dS82OjZz");
             if (isCredentialValid) {
                 DateTime localDate = DateTime.Now;
                 var token = TokenGenerator.GenerateTokenJwt(loginDTO.Username);
