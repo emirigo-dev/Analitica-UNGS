@@ -105,6 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\CargarCSVController.cs" />
+    <Compile Include="Controllers\PromedioAnualAlumnoController.cs" />
+    <Compile Include="Controllers\PromedioByAnioController.cs" />
     <Compile Include="Controllers\PromedioInstitucionController.cs" />
     <Compile Include="Controllers\PromedioMateriaController.cs" />
     <Compile Include="Controllers\PromedioNivelController.cs" />
@@ -116,8 +119,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Materia.cs" />
     <Compile Include="Models\Promedio.cs" />
     <Compile Include="Models\LoginDTO.cs" />
+    <Compile Include="Models\PromedioAnualAlumno.cs" />
+    <Compile Include="Models\PromedioByAnio.cs" />
     <Compile Include="Models\PromedioMateria.cs" />
     <Compile Include="Models\PromedioInstitucion.cs" />
     <Compile Include="Models\PromedioNivel.cs" />
