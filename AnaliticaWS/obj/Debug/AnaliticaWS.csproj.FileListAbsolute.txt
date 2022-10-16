@@ -175,3 +175,9 @@ C:\Users\EMI\Desktop\Analitica-UNGS\AnaliticaWS\bin\Microsoft.IdentityModel.Toke
 C:\Users\EMI\Desktop\Analitica-UNGS\AnaliticaWS\bin\Microsoft.IdentityModel.Tokens.xml
 C:\Users\EMI\Desktop\Analitica-UNGS\AnaliticaWS\bin\System.IdentityModel.Tokens.Jwt.pdb
 C:\Users\EMI\Desktop\Analitica-UNGS\AnaliticaWS\bin\System.IdentityModel.Tokens.Jwt.xml
+C:\Users\EMI\Desktop\Analitica-UNGS\AnaliticaWS\bin\EntityFramework.dll
+C:\Users\EMI\Desktop\Analitica-UNGS\AnaliticaWS\bin\EntityFramework.SqlServer.dll
+C:\Users\EMI\Desktop\Analitica-UNGS\AnaliticaWS\bin\Z.EntityFramework.Extensions.dll
+C:\Users\EMI\Desktop\Analitica-UNGS\AnaliticaWS\bin\EntityFramework.xml
+C:\Users\EMI\Desktop\Analitica-UNGS\AnaliticaWS\bin\EntityFramework.SqlServer.xml
+C:\Users\EMI\Desktop\Analitica-UNGS\AnaliticaWS\bin\Z.EntityFramework.Extensions.xml

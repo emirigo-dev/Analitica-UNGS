@@ -13,6 +13,7 @@ namespace AnaliticaWS.Controllers
     public class UserController : ApiController
     {
         [HttpPost]
+        //[RequireHttps]
         public IHttpActionResult Login(LoginDTO loginDTO) {
 
             ResponseToken res = new ResponseToken();
@@ -20,7 +21,9 @@ namespace AnaliticaWS.Controllers
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);
 
-            bool isCredentialValid = (loginDTO.Username == "Boletin" && loginDTO.Password == "S1@2dS82OjZz");
+            bool isCredentialValid = ((loginDTO.Username == "Boletin" && loginDTO.Password == "S1@2dS82OjZz") 
+                                        || (loginDTO.Username == "Portal" && loginDTO.Password == "@CvLw56P2%77")
+                                        || (loginDTO.Username == "AOT" && loginDTO.Password == "33Mjx15DK3$9"));
             if (isCredentialValid) {
                 DateTime localDate = DateTime.Now;
                 var token = TokenGenerator.GenerateTokenJwt(loginDTO.Username);

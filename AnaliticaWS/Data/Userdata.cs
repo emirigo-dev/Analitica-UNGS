@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Net.Http;
+using System.Net;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices.ComTypes;
 using System.Web.Services.Description;
 using AnaliticaWS.Models;
 using MySql.Data.MySqlClient;
+using System.Web.UI.WebControls;
+using System.Web.Http;
 
 namespace AnaliticaWS.Data
 {
@@ -134,24 +138,35 @@ namespace AnaliticaWS.Data
             try
             {
 
-                cmd.ExecuteNonQuery();
+        cmd.ExecuteNonQuery();
                 using (MySqlDataReader dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
                     {
 
                         prom.Add(new PromedioAnualAlumno()
-                        {
+                        {   
+                            Mensaje = "OK.",
+                            Jurisdiccion = dr["JURISDICCION"].ToString(),
+                            Grado = dr["GRADO"].ToString(),
+                            Legajo = dr["LEGAJO"].ToString(),
                             Establecimiento = dr["INSTITUCION"].ToString(),
                             Alumno = dr["FULLNAME"].ToString(),
                             Nivel = dr["NIVEL"].ToString(),
                             Anio = dr["ANIO"].ToString(),
+                            Nota = dr["NOTA"].ToString(),
                             Materia = dr["MATERIA"].ToString()
                         });
                     }
                         
                     
                 }
+                if (prom.Count > 0) {
+                    return prom;
+                }
+                prom.Add(new PromedioAnualAlumno(){ 
+                    Mensaje = "No se encontraron datos para este año"
+                });
                 return prom;
             }
             catch (Exception ex)
@@ -161,9 +176,9 @@ namespace AnaliticaWS.Data
 
         }
 
-        public static PromedioByAnio getAllPromedioAlumnoByAnio(string legajo, string anio)
+        public static PromedioPorAlumno getAllPromedioAlumnoPorLegajo(string legajo)
         {
-            PromedioByAnio PromedioAnio = new PromedioByAnio();
+            PromedioPorAlumno PromedioAnio = new PromedioPorAlumno();
 
             List<Materia> mat = new List<Materia>();
 
@@ -171,10 +186,9 @@ namespace AnaliticaWS.Data
             connect.ConnectionString = Connection.getConnection();
             connect.Open();
 
-            MySqlCommand cmd = new MySqlCommand("getAlumnoByAnio", connect);
+            MySqlCommand cmd = new MySqlCommand("getAlumnoByLegajo", connect);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("LEGAJOALUMNO", legajo);
-            cmd.Parameters.AddWithValue("ANIO", anio);
             try
             {
 
@@ -187,10 +201,14 @@ namespace AnaliticaWS.Data
 
                         mat.Add(new Materia
                         {
+                            Anio = dr["ANIO"].ToString(),
+                            Grado = dr["GRADO"].ToString(),
+                            Nivel = dr["NIVEL"].ToString(),
                             Nombre = dr["MATERIA"].ToString(),
                             Nota = dr["NOTA"].ToString()
                         });
-
+                        PromedioAnio.Legajo = dr["LEGAJO"].ToString();
+                        PromedioAnio.Jurisdiccion = dr["JURISDICCION"].ToString();
                         PromedioAnio.Institucion = dr["INSTITUCION"].ToString();
                         PromedioAnio.Nombre = dr["FULLNAME"].ToString();
                     }
@@ -217,7 +235,71 @@ namespace AnaliticaWS.Data
 
         }
 
-        public static List<PromedioWithParameters> getPromedioWithInsitucionMateriaNivel(string idInstitucion, string idMateria, string idNivel)
+
+        public static MedicionMessage insertarMedicionesDeSensores(string idSensor, string valorMedicion, DateTime horario)
+        {
+
+
+            MedicionMessage message = new MedicionMessage();
+
+            string format = "yyyy-MM-dd HH:mm:ss";
+            string insert = horario.ToString(format);
+
+            if (idSensor == null || idSensor == "")
+            {
+                message.StatusCode = 404;
+                message.Message = "El idSensor debe tener un valor";
+                message.HasError = true;
+                return message;
+            }
+
+            if (valorMedicion == null || valorMedicion == "")
+            {
+                message.StatusCode = 404;
+                message.Message = "El valor de medicion debe tener un valor";
+                message.HasError = true;
+                return message;
+            }
+
+            if (insert == "0001-01-01 00:00:00" || valorMedicion == "")
+            {
+                message.StatusCode = 404;
+                message.Message = "El horario debe tener un valor";
+                message.HasError = true;
+                return message;
+            }
+
+            MySqlConnection connect = new MySqlConnection();
+            connect.ConnectionString = Connection.getConnection();
+            connect.Open();
+
+            MySqlCommand cmd = new MySqlCommand("insertarMedicionesSensores", connect);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("idSensor", idSensor);
+            cmd.Parameters.AddWithValue("horario", insert);
+            cmd.Parameters.AddWithValue("valorMedicion", valorMedicion);
+            try
+            {
+
+                cmd.ExecuteNonQuery();
+                message.StatusCode = 200;
+                message.Message = "Medicion insertada";
+                message.HasError = false;
+                return message;
+            }
+            catch (Exception ex)
+            {
+                
+                message.StatusCode = 404;
+                message.Message = ex.Message;
+                message.HasError = true;
+                return message;
+            }
+        }
+
+
+
+        public static PromedioWithParameters getPromedioWithInsitucionMateriaNivel(string idInstitucion, string idMateria, string idNivel)
         {
 
             List<PromedioWithParameters> prom = new List<PromedioWithParameters>();
@@ -245,6 +327,9 @@ namespace AnaliticaWS.Data
                             Instituto = dr["INSTITUTO"].ToString(),
                             Materia = dr["MATERIA"].ToString(),
                             Nivel = dr["NIVEL"].ToString(),
+                            Grado = dr["GRADO"].ToString(),
+                            Anio = dr["ANIO_CURSADO"].ToString(),
+                            Jurisdiccion = dr["JURISDICCION"].ToString(),
                             Promedio = dr["PROMEDIO"].ToString()
                         });
                     }
@@ -260,12 +345,13 @@ namespace AnaliticaWS.Data
 
                     });
                 }
-                return prom;
+                return prom[0];
             }
             catch (Exception ex)
             {
-                return prom;
+                return prom[0];
             }
         }
+
     }
 }

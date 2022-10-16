@@ -26,7 +26,7 @@ namespace AnaliticaWS.Controllers
         }
 
         // POST api/<controller>
-        public List<PromedioWithParameters> Post([FromBody]Promedio prom)
+        public PromedioWithParameters Post([FromBody]Promedio prom)
         {
             return Userdata.getPromedioWithInsitucionMateriaNivel(prom.idInstitucion, prom.idMateria, prom.idNivel);
         }
