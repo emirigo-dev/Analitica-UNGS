@@ -6,7 +6,7 @@ using System.Web;
 namespace AnaliticaWS.Models
 {
     public class PromedioWithParameters
-    {
+    {   
         public string Mensaje;   
         public string Instituto;
         public string Jurisdiccion;
@@ -14,6 +14,8 @@ namespace AnaliticaWS.Models
         public string Anio;
         public string Nivel;
         public string Grado;
+        public Boolean Conceptual;
         public string Promedio;
+        public NotasConceptuales Notas;
     }
 }

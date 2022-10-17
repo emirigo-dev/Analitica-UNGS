@@ -11,6 +11,9 @@ using AnaliticaWS.Models;
 using MySql.Data.MySqlClient;
 using System.Web.UI.WebControls;
 using System.Web.Http;
+using System.Text;
+using System.Web.UI;
+using System.Xml.Linq;
 
 namespace AnaliticaWS.Data
 {
@@ -299,10 +302,11 @@ namespace AnaliticaWS.Data
 
 
 
-        public static PromedioWithParameters getPromedioWithInsitucionMateriaNivel(string idInstitucion, string idMateria, string idNivel)
+        public static PromedioWithParameters getPromedioWithInsitucionMateriaNivel(string idInstitucion, string idMateria, string idNivel, string idGrado, string anio)
         {
 
             List<PromedioWithParameters> prom = new List<PromedioWithParameters>();
+            NotasConceptuales nota = new NotasConceptuales();
 
 
             MySqlConnection connect = new MySqlConnection();
@@ -314,6 +318,10 @@ namespace AnaliticaWS.Data
             cmd.Parameters.AddWithValue("idInstitucion", idInstitucion);
             cmd.Parameters.AddWithValue("idMateria", idMateria);
             cmd.Parameters.AddWithValue("idNivel", idNivel);
+            cmd.Parameters.AddWithValue("idGrado", idGrado);
+            cmd.Parameters.AddWithValue("anio", anio);
+
+
             try
             {
 
@@ -322,17 +330,40 @@ namespace AnaliticaWS.Data
                 {
                     while (dr.Read())
                     {
-                        prom.Add(new PromedioWithParameters()
+                        if (dr["CONCEPTO"].ToString() == "Supera")
                         {
-                            Instituto = dr["INSTITUTO"].ToString(),
-                            Materia = dr["MATERIA"].ToString(),
-                            Nivel = dr["NIVEL"].ToString(),
-                            Grado = dr["GRADO"].ToString(),
-                            Anio = dr["ANIO_CURSADO"].ToString(),
-                            Jurisdiccion = dr["JURISDICCION"].ToString(),
-                            Promedio = dr["PROMEDIO"].ToString()
-                        });
+                            nota.Supera = dr["Porcentaje"].ToString();
+                        }
+                        else if (dr["CONCEPTO"].ToString() == "MUY BIEN")
+                        {
+                            nota.MBien = dr["Porcentaje"].ToString();
+                        }
+                        else if (dr["CONCEPTO"].ToString() == "BIEN")
+                        {
+                            nota.Bien = dr["Porcentaje"].ToString();
+                        }
+                        else if (dr["CONCEPTO"].ToString() == "INSUFICIENTE") {
+                            nota.Insuficiente = dr["Porcentaje"].ToString();
+
+                        }
+
+
                     }
+
+                    prom.Add(new PromedioWithParameters()
+                    {
+
+                        Conceptual = dr["CONCEPTUAL"].ToString() == "0" ? false : true,
+                        Instituto = dr["INSTITUTO"].ToString(),
+                        Materia = dr["MATERIA"].ToString(),
+                        Nivel = dr["NIVEL"].ToString(),
+                        Grado = dr["GRADO"].ToString(),
+                        Anio = dr["ANIO_CURSADO"].ToString(),
+                        Jurisdiccion = dr["JURISDICCION"].ToString(),
+                        Promedio = dr["PROMEDIO"].ToString(),
+                        Notas = nota,
+                       
+                    });
                 }
                 if (prom.Count != 0)
                 {
@@ -349,9 +380,95 @@ namespace AnaliticaWS.Data
             }
             catch (Exception ex)
             {
+                prom.Add(new PromedioWithParameters()
+                {
+                    Mensaje = "No se encontro notas para los parametros indicados",
+
+                });
                 return prom[0];
             }
         }
+
+        public static Boolean BulkToUpdateAsistenciaMySQL(List<Asistencia> asistencias) {
+
+            try
+            {
+                MySqlConnection connect = new MySqlConnection();
+                connect.ConnectionString = Connection.getConnection();
+                StringBuilder sCommand = new StringBuilder("REPLACE INTO cursada_alumno(ID, LEGAJO_ALUMNO, ID_CURSADA, ASISTENCIA) VALUES ");
+                using (MySqlConnection mConnection = new MySqlConnection(connect.ConnectionString))
+                {
+                    List<string> Rows = new List<string>();
+                    foreach (Asistencia asis in asistencias)
+                    {
+                        Rows.Add(string.Format("('{0}','{1}','{2}','{3}')", MySqlHelper.EscapeString(asis.id), MySqlHelper.EscapeString(asis.legajoAlumno), MySqlHelper.EscapeString(asis.idCursada), MySqlHelper.EscapeString(asis.valor)));
+                    }
+                    sCommand.Append(string.Join(",", Rows));
+                    sCommand.Append(";");
+                    mConnection.Open();
+                    using (MySqlCommand myCmd = new MySqlCommand(sCommand.ToString(), mConnection))
+                    {
+
+                        myCmd.CommandType = CommandType.Text;
+                        myCmd.ExecuteNonQuery();
+                    }
+
+                }
+
+                return false;
+
+            }
+            catch (Exception e)
+            {
+                return true;
+            }
+
+        }
+
+        public static Boolean BulkToMySQL(List<NotasDTO> notas)
+        {
+            try {
+                MySqlConnection connect = new MySqlConnection();
+                connect.ConnectionString = Connection.getConnection();
+                StringBuilder sCommand = new StringBuilder("INSERT IGNORE INTO nota (LEGAJO_ALUMNO, ID_CURSADA, VALOR) VALUES ");
+                using (MySqlConnection mConnection = new MySqlConnection(connect.ConnectionString))
+                {
+                    List<string> Rows = new List<string>();
+                    foreach (NotasDTO nota in notas)
+                    {
+                        Rows.Add(string.Format("('{0}','{1}', '{2}')", MySqlHelper.EscapeString(nota.legajoAlumno), MySqlHelper.EscapeString(nota.idCursada), MySqlHelper.EscapeString(nota.nota)));
+                    }
+                    sCommand.Append(string.Join(",", Rows));
+                    sCommand.Append(";");
+                    mConnection.Open();
+                    using (MySqlCommand myCmd = new MySqlCommand(sCommand.ToString(), mConnection))
+                    {
+                         
+                        myCmd.CommandType = CommandType.Text;
+                        myCmd.ExecuteNonQuery();
+                    }
+
+                    /*MySqlCommand command2 = new MySqlCommand("SHOW WARNINGS", mConnection);
+                    using (MySqlDataReader reader = command2.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            String level = reader["Level"].ToString();
+                            String code = reader["Code"].ToString();
+                            String message = reader["Message"].ToString();
+                        }
+                    }
+                    */
+                }
+
+                return false;
+
+            } catch (Exception e){
+                return true;
+            }
+         
+        }
+
 
     }
 }

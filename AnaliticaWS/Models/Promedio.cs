@@ -10,5 +10,7 @@ namespace AnaliticaWS.Models
         public string idInstitucion;
         public string idMateria;
         public string idNivel;
+        public string idGrado;
+        public string anio;
     }
 }
