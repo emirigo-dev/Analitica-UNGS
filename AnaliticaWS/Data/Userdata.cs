@@ -390,13 +390,17 @@ namespace AnaliticaWS.Data
         }
 
         public static Boolean BulkToUpdateAsistenciaMySQL(List<Asistencia> asistencias) {
+           
 
             try
             {
                 MySqlConnection connect = new MySqlConnection();
                 connect.ConnectionString = Connection.getConnection();
-                StringBuilder sCommand = new StringBuilder("REPLACE INTO cursada_alumno(ID, LEGAJO_ALUMNO, ID_CURSADA, ASISTENCIA) VALUES ");
+                
+                StringBuilder sCommand = new StringBuilder("INSERT IGNORE INTO cursada_alumno (ID, LEGAJO_ALUMNO, ID_CURSADA, ASISTENCIA) VALUES ");
                 using (MySqlConnection mConnection = new MySqlConnection(connect.ConnectionString))
+
+
                 {
                     List<string> Rows = new List<string>();
                     foreach (Asistencia asis in asistencias)
@@ -404,7 +408,9 @@ namespace AnaliticaWS.Data
                         Rows.Add(string.Format("('{0}','{1}','{2}','{3}')", MySqlHelper.EscapeString(asis.id), MySqlHelper.EscapeString(asis.legajoAlumno), MySqlHelper.EscapeString(asis.idCursada), MySqlHelper.EscapeString(asis.valor)));
                     }
                     sCommand.Append(string.Join(",", Rows));
+                    sCommand.Append(" ON DUPLICATE KEY UPDATE ASISTENCIA = VALUES(ASISTENCIA)");
                     sCommand.Append(";");
+                    var hol = sCommand;
                     mConnection.Open();
                     using (MySqlCommand myCmd = new MySqlCommand(sCommand.ToString(), mConnection))
                     {
@@ -412,6 +418,18 @@ namespace AnaliticaWS.Data
                         myCmd.CommandType = CommandType.Text;
                         myCmd.ExecuteNonQuery();
                     }
+
+                    /*MySqlCommand command2 = new MySqlCommand("SHOW WARNINGS", mConnection);
+                    using (MySqlDataReader reader = command2.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            String level = reader["Level"].ToString();
+                            String code = reader["Code"].ToString();
+                            String message = reader["Message"].ToString();
+                        }
+                    }
+                    */
 
                 }
 
@@ -448,17 +466,7 @@ namespace AnaliticaWS.Data
                         myCmd.ExecuteNonQuery();
                     }
 
-                    /*MySqlCommand command2 = new MySqlCommand("SHOW WARNINGS", mConnection);
-                    using (MySqlDataReader reader = command2.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            String level = reader["Level"].ToString();
-                            String code = reader["Code"].ToString();
-                            String message = reader["Message"].ToString();
-                        }
-                    }
-                    */
+                   
                 }
 
                 return false;
