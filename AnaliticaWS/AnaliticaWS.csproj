@@ -118,6 +118,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CargarCSVAsistenciaController.cs" />
     <Compile Include="Controllers\CargarCSVController.cs" />
+    <Compile Include="Controllers\SensorsController.cs" />
     <Compile Include="Controllers\MedicionSensoresController.cs" />
     <Compile Include="Controllers\PromedioAnualAlumnoController.cs" />
     <Compile Include="Controllers\PromedioPorAlumnoController.cs" />
@@ -138,6 +139,7 @@
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Asistencia.cs" />
+    <Compile Include="Models\SensorABM.cs" />
     <Compile Include="Models\Materia.cs" />
     <Compile Include="Models\MedicionMessage.cs" />
     <Compile Include="Models\NotasConceptuales.cs" />

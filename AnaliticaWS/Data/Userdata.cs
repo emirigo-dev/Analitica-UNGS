@@ -55,6 +55,9 @@ namespace AnaliticaWS.Data
 
         }
 
+
+      
+
         public static List<PromedioMateria> getAllPromediosMateria()
         {
 
@@ -239,6 +242,92 @@ namespace AnaliticaWS.Data
         }
 
 
+        public static Errors deleteSensor(int id)
+        {
+            Errors err = new Errors();
+
+            MySqlConnection connect = new MySqlConnection();
+            connect.ConnectionString = Connection.getConnection();
+            connect.Open();
+
+            MySqlCommand cmd = new MySqlCommand("deleteSensor", connect);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("idSensor", id);
+            try
+            {
+                cmd.ExecuteNonQuery();
+                err.statusCode = 200;
+                err.message = "Sensor eliminado";
+                err.hasError = false;
+                return err;
+            }
+            catch (Exception ex)
+            {
+                err.statusCode = 404;
+                err.message = ex.Message;
+                err.hasError = true;
+                return err;
+            }
+
+
+        }
+        public static SensorABM insertOrUpdateSensors(string idSensor, string tipoMedicion, string idArea) {
+
+            SensorABM sensor = new SensorABM();
+
+
+            if (idSensor == null || idSensor == "") {
+                sensor.statusCode = 404;
+                sensor.message = "El idSensor debe tener un valor";
+                sensor.hasError = true;
+                return sensor;
+            }
+            if (tipoMedicion == null || tipoMedicion == "")
+            {
+                sensor.statusCode = 404;
+                sensor.message = "El tipoMedicion debe tener un valor";
+                sensor.hasError = true;
+                return sensor;
+            }
+            if (idArea == null || idArea == "")
+            {
+                sensor.statusCode = 404;
+                sensor.message = "El idArea debe tener un valor";
+                sensor.hasError = true;
+                return sensor;
+            }
+
+            MySqlConnection connect = new MySqlConnection();
+            connect.ConnectionString = Connection.getConnection();
+            connect.Open();
+
+            MySqlCommand cmd = new MySqlCommand("insertOrUpdateSensors", connect);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("idSensor", idSensor);
+            cmd.Parameters.AddWithValue("tipoMedicion", tipoMedicion);
+            cmd.Parameters.AddWithValue("idArea", idArea);
+            try
+            {
+
+                cmd.ExecuteNonQuery();
+                sensor.statusCode = 200;
+                sensor.message = "Medicion insertada/actualizada";
+                sensor.hasError = false;
+                return sensor;
+            }
+            catch (Exception ex)
+            {
+
+                sensor.statusCode = 404;
+                sensor.message = ex.Message;
+                sensor.hasError = true;
+                return sensor;
+            }
+
+
+            return sensor;
+        
+        }
         public static MedicionMessage insertarMedicionesDeSensores(string idSensor, string valorMedicion, DateTime horario)
         {
 
@@ -478,5 +567,15 @@ namespace AnaliticaWS.Data
         }
 
 
+        public class Errors
+        {
+            public int statusCode { get; set; }
+            public string message { get; set; }
+            public Boolean hasError { get; set; }
+
+        }
+
     }
+
+   
 }
