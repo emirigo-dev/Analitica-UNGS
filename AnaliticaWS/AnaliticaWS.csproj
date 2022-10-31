@@ -118,6 +118,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CargarCSVAsistenciaController.cs" />
     <Compile Include="Controllers\CargarCSVController.cs" />
+    <Compile Include="Controllers\DeviceController.cs" />
     <Compile Include="Controllers\SensorsController.cs" />
     <Compile Include="Controllers\MedicionSensoresController.cs" />
     <Compile Include="Controllers\PromedioAnualAlumnoController.cs" />

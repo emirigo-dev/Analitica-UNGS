@@ -23,7 +23,8 @@ namespace AnaliticaWS.Controllers
 
             bool isCredentialValid = ((loginDTO.Username == "Boletin" && loginDTO.Password == "S1@2dS82OjZz") 
                                         || (loginDTO.Username == "Portal" && loginDTO.Password == "@CvLw56P2%77")
-                                        || (loginDTO.Username == "AOT" && loginDTO.Password == "33Mjx15DK3$9"));
+                                        || (loginDTO.Username == "AOT" && loginDTO.Password == "33Mjx15DK3$9")
+                                        || (loginDTO.Username == "AhorroEnergetico" && loginDTO.Password == "SS1HI^41Owwg"));
             if (isCredentialValid) {
                 DateTime localDate = DateTime.Now;
                 var token = TokenGenerator.GenerateTokenJwt(loginDTO.Username);

@@ -311,7 +311,7 @@ namespace AnaliticaWS.Data
 
                 cmd.ExecuteNonQuery();
                 sensor.statusCode = 200;
-                sensor.message = "Medicion insertada/actualizada";
+                sensor.message = "Sensor insertada/actualizada";
                 sensor.hasError = false;
                 return sensor;
             }
@@ -323,9 +323,6 @@ namespace AnaliticaWS.Data
                 sensor.hasError = true;
                 return sensor;
             }
-
-
-            return sensor;
         
         }
         public static MedicionMessage insertarMedicionesDeSensores(string idSensor, string valorMedicion, DateTime horario)
@@ -389,6 +386,102 @@ namespace AnaliticaWS.Data
             }
         }
 
+
+        public static SensorABM insertOrUpdateDevice(string idDispositivo, string tipoDispositivo, string nombreDispositivo, string idArea)
+        {
+
+            SensorABM sensor = new SensorABM();
+
+
+            if (idDispositivo == null || idDispositivo == "")
+            {
+                sensor.statusCode = 404;
+                sensor.message = "El idDispositivo debe tener un valor";
+                sensor.hasError = true;
+                return sensor;
+            }
+            if (tipoDispositivo == null || tipoDispositivo == "")
+            {
+                sensor.statusCode = 404;
+                sensor.message = "El tipoDispositivo debe tener un valor";
+                sensor.hasError = true;
+                return sensor;
+            }
+            if (nombreDispositivo == null || nombreDispositivo == "")
+            {
+                sensor.statusCode = 404;
+                sensor.message = "El nombreDispositivo debe tener un valor";
+                sensor.hasError = true;
+                return sensor;
+            }
+            if (idArea == null || idArea == "")
+            {
+                sensor.statusCode = 404;
+                sensor.message = "El idArea debe tener un valor";
+                sensor.hasError = true;
+                return sensor;
+            }
+
+            MySqlConnection connect = new MySqlConnection();
+            connect.ConnectionString = Connection.getConnection();
+            connect.Open();
+
+            MySqlCommand cmd = new MySqlCommand("insertOrUpdateDevices", connect);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("idDispositivo", idDispositivo);
+            cmd.Parameters.AddWithValue("tipoDispositivo", tipoDispositivo);
+            cmd.Parameters.AddWithValue("nombreDispositivo", nombreDispositivo);
+            cmd.Parameters.AddWithValue("idArea", idArea);
+            try
+            {
+
+                cmd.ExecuteNonQuery();
+                sensor.statusCode = 200;
+                sensor.message = "Dispositivo insertado/actualizado";
+                sensor.hasError = false;
+                return sensor;
+            }
+            catch (Exception ex)
+            {
+
+                sensor.statusCode = 404;
+                sensor.message = ex.Message;
+                sensor.hasError = true;
+                return sensor;
+            }
+
+        }
+
+
+        public static Errors deleteDevice(int id)
+        {
+            Errors err = new Errors();
+
+            MySqlConnection connect = new MySqlConnection();
+            connect.ConnectionString = Connection.getConnection();
+            connect.Open();
+
+            MySqlCommand cmd = new MySqlCommand("deleteDevice", connect);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("idDevice", id);
+            try
+            {
+                cmd.ExecuteNonQuery();
+                err.statusCode = 200;
+                err.message = "Dispositivo eliminado";
+                err.hasError = false;
+                return err;
+            }
+            catch (Exception ex)
+            {
+                err.statusCode = 404;
+                err.message = ex.Message;
+                err.hasError = true;
+                return err;
+            }
+
+
+        }
 
 
         public static PromedioWithParameters getPromedioWithInsitucionMateriaNivel(string idInstitucion, string idMateria, string idNivel, string idGrado, string anio)
