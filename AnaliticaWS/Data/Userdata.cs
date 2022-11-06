@@ -514,10 +514,9 @@ namespace AnaliticaWS.Data
                             Jurisdiccion = dr["Jurisdiccion"].ToString(),
                             TipoMedicion = dr["TipoMedicion"].ToString(),
                             UnidadDeMedida = dr["UnidadMedida"].ToString(),
-                            FechaYHoraEnvio = dr["Dia"].ToString()
+                            FechaYHoraEnvio = DateTime.Now.ToString("yyyy-MM-dd")
 
-
-                        }) ;
+                    }) ;
 
 
                     }
