@@ -484,6 +484,57 @@ namespace AnaliticaWS.Data
         }
 
 
+        public static List<promediosSensores> getMedicionesPorDia()
+        {
+
+            List<promediosSensores> promediosSensores = new List<promediosSensores>();
+            MySqlConnection connect = new MySqlConnection();
+            connect.ConnectionString = Connection.getConnection();
+            connect.Open();
+
+            MySqlCommand cmd = new MySqlCommand("promedioMedicionPorDia", connect);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            try
+            {
+
+                cmd.ExecuteNonQuery();
+                using (MySqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        promediosSensores.Add(new promediosSensores()
+                        {
+
+                            IdSensor = dr["Sensor"].ToString(),
+                            NombreSensor = dr["Nombre"].ToString(),
+                            IdArea = dr["Area"].ToString(),
+                            NombreArea = dr["NombreArea"].ToString(),
+                            Institucion = dr["NombreInstitucion"].ToString(),
+                            Jurisdiccion = dr["Jurisdiccion"].ToString(),
+                            TipoMedicion = dr["TipoMedicion"].ToString(),
+                            UnidadDeMedida = dr["UnidadMedida"].ToString(),
+                            FechaYHoraEnvio = dr["Dia"].ToString()
+
+
+                        });
+
+
+                    }
+
+
+                }
+            
+                Console.WriteLine(promediosSensores);
+                return promediosSensores;
+            }
+            catch (Exception ex)
+            {
+                return promediosSensores;
+            }
+        }
+
+
         public static PromedioWithParameters getPromedioWithInsitucionMateriaNivel(string idInstitucion, string idMateria, string idNivel, string idGrado, string anio)
         {
 
