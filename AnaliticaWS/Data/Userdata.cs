@@ -517,7 +517,7 @@ namespace AnaliticaWS.Data
                             FechaYHoraEnvio = dr["Dia"].ToString()
 
 
-                        });
+                        }) ;
 
 
                     }
