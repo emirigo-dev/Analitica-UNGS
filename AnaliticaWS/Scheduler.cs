@@ -17,10 +17,9 @@ namespace AnaliticaWS
             IJobDetail job = JobBuilder.Create<Job>().Build();
 
             ITrigger trigger = TriggerBuilder.Create().WithDailyTimeIntervalSchedule(s =>
-            //s.WithIntervalInHours(24)
-            s.WithIntervalInSeconds(60)
+            s.WithIntervalInHours(24)
             .OnEveryDay()
-            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(17, 53))).Build();
+            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(23, 58))).Build();
 
             scheduler.ScheduleJob(job, trigger);
         }

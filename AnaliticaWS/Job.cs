@@ -25,7 +25,7 @@ namespace AnaliticaWS
             string url = "https://para-boletin-production.up.railway.app/api/analitica?apiKey=b1a6a576d91d5796e";
             var client = new HttpClient();
             List<promediosSensores> prom = Userdata.getMedicionesPorDia();
-            string json = "{ promediosSensores:" + JsonConvert.SerializeObject(prom) + "}";
+            string json = "{ \"promediosSensores\":" + JsonConvert.SerializeObject(prom) + "}";
             HttpContent content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
             var httpResponse = await client.PostAsync(url, content);
             System.Diagnostics.Debug.WriteLine("cONTENTa" + content);
