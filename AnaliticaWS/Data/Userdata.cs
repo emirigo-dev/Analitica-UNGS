@@ -621,6 +621,39 @@ namespace AnaliticaWS.Data
             }
         }
 
+        public static void insertarConsumos(List<Consumo> consumos) {
+            try
+            {
+                MySqlConnection connect = new MySqlConnection();
+                connect.ConnectionString = Connection.getConnection();
+
+                StringBuilder sCommand = new StringBuilder("INSERT IGNORE INTO consumo (ID_DISPOSITIVO, VALOR, FECHA) VALUES ");
+                using (MySqlConnection mConnection = new MySqlConnection(connect.ConnectionString))
+
+
+                {
+                    List<string> Rows = new List<string>();
+
+                    foreach (Consumo cons in consumos)
+                    {
+                        Rows.Add(string.Format("('{0}','{1}','{2}')", MySqlHelper.EscapeString(cons.id.ToString()), MySqlHelper.EscapeString(cons.consumo.ToString()), MySqlHelper.EscapeString(cons.fecha.ToString("yyyy-MM-dd H:mm:ss"))));
+                    }
+                    sCommand.Append(string.Join(",", Rows));
+                    sCommand.Append(";");
+                    mConnection.Open();
+                    using (MySqlCommand myCmd = new MySqlCommand(sCommand.ToString(), mConnection))
+                    {
+
+                        myCmd.CommandType = CommandType.Text;
+                        myCmd.ExecuteNonQuery();
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+            }
+        }
         public static Boolean BulkToUpdateAsistenciaMySQL(List<Asistencia> asistencias) {
            
 

@@ -11,6 +11,7 @@ namespace AnaliticaWS
     {
         protected void Application_Start()
         {
+            Scheduler.StartAhorro();
             Scheduler.Start();
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
