@@ -17,10 +17,10 @@ namespace AnaliticaWS
             IJobDetail job = JobBuilder.Create<Job>().Build();
 
             ITrigger trigger = TriggerBuilder.Create().WithDailyTimeIntervalSchedule(s =>
-            s.WithIntervalInSeconds(20)
-            //s.WithIntervalInHours(24)
+            //s.WithIntervalInSeconds(20)
+            s.WithIntervalInHours(24)
             .OnEveryDay()
-            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(20, 01))).Build();
+            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(23, 58))).Build();
 
             scheduler.ScheduleJob(job, trigger);
         }
@@ -33,10 +33,10 @@ namespace AnaliticaWS
             IJobDetail job = JobBuilder.Create<JobAhorro>().Build();
 
             ITrigger trigger = TriggerBuilder.Create().WithDailyTimeIntervalSchedule(s =>
-            s.WithIntervalInSeconds(20)
-            //s.WithIntervalInHours(24)
+            //s.WithIntervalInSeconds(20)
+            s.WithIntervalInHours(24)
             .OnEveryDay()
-            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(20, 01))).Build();
+            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(23, 50))).Build();
 
             scheduler.ScheduleJob(job, trigger);
         }
