@@ -621,6 +621,109 @@ namespace AnaliticaWS.Data
             }
         }
 
+        public static ConsumoBoletinError getConsumosMensaules(string institucion, string mes, string anio) {
+
+            ConsumoBoletinError consumoData = new ConsumoBoletinError();
+            consumoData.consumos = new List<ConsumoBoletin>();
+
+
+            if (institucion == null || institucion == "")
+            {
+                consumoData.statusCode = 404;
+                consumoData.message = "La institucion debe tener un valor";
+                consumoData.hasError = true;
+                return consumoData;
+            }
+            if (mes == null || mes == "")
+            {
+                consumoData.statusCode = 404;
+                consumoData.message = "El mes debe tener un valor";
+                consumoData.hasError = true;
+                return consumoData;
+            }
+            if (anio == null || anio == "")
+            {
+                consumoData.statusCode = 404;
+                consumoData.message = "El año debe tener un valor";
+                consumoData.hasError = true;
+                return consumoData;
+            }
+            
+            MySqlConnection connect = new MySqlConnection();
+            connect.ConnectionString = Connection.getConnection();
+            connect.Open();
+
+            MySqlCommand cmd = new MySqlCommand("getConsumoEnergeticoMensual", connect);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("INSTITUCION", institucion);
+            cmd.Parameters.AddWithValue("MES", mes);
+            cmd.Parameters.AddWithValue("ANIO", anio);
+            try
+            {
+
+                cmd.ExecuteNonQuery();
+                using (MySqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        consumoData.consumos.Add(new ConsumoBoletin()
+                        {
+                            IdDispositivo = dr["IDDispositivo"].ToString(),
+                            nombreDispositivo = dr["Nombre"].ToString(),
+                            promedio = dr["Promedio"].ToString(),
+                            nombreArea = dr["NombreArea"].ToString(),
+                            nombreInstitucion = dr["NombreInstitucion"].ToString()
+                        });
+
+                    }
+                }
+
+                consumoData.statusCode = 200;
+                consumoData.message = "Ok";
+                consumoData.hasError = false;
+                return consumoData;
+
+            }
+            catch (Exception ex)
+            {
+
+                consumoData.statusCode = 404;
+                consumoData.message = ex.Message;
+                consumoData.hasError = true;
+                return consumoData;
+            }
+
+        }
+        public static void insertLog(Log alog) {
+            try
+            {
+                MySqlConnection connect = new MySqlConnection();
+                connect.ConnectionString = Connection.getConnection();
+
+                StringBuilder sCommand = new StringBuilder("INSERT IGNORE INTO log (PROCESO, ESTADO, FECHAHORA) VALUES ");
+                using (MySqlConnection mConnection = new MySqlConnection(connect.ConnectionString))
+
+
+                {
+                    List<string> Rows = new List<string>();
+                    Rows.Add(string.Format("('{0}','{1}','{2}')", MySqlHelper.EscapeString(alog.proceso.ToString()), MySqlHelper.EscapeString(alog.estado.ToString()), MySqlHelper.EscapeString(alog.fecha.ToString("yyyy-MM-dd HH:mm:ss"))));
+                    sCommand.Append(string.Join(",", Rows));
+                    sCommand.Append(";");
+                    mConnection.Open();
+                    using (MySqlCommand myCmd = new MySqlCommand(sCommand.ToString(), mConnection))
+                    {
+
+                        myCmd.CommandType = CommandType.Text;
+                        myCmd.ExecuteNonQuery();
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+            }
+
+        }
         public static void insertarConsumos(List<Consumo> consumos) {
             try
             {

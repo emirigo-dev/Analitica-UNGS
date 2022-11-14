@@ -22,8 +22,10 @@ namespace AnaliticaWS
     {
         public async void Execute(IJobExecutionContext context)
         {
-
-            string url = "https://ahorro-energetico-api-consumo.herokuapp.com/api/consumo/dispositivos";
+            Log alog = new Log();
+            alog.fecha = DateTime.Now;
+            alog.proceso = "Consumos diarios";
+            string url = "https://ahorro-energetico-consumo.herokuapp.com/api/consumo/dispositivos";
             var client = new HttpClient();
             var httpResponse = await client.GetAsync(url);
             if (httpResponse.IsSuccessStatusCode)
@@ -32,11 +34,23 @@ namespace AnaliticaWS
                 if (result.Length > 18) {
                     List<Consumo> results = JsonConvert.DeserializeObject<List<Consumo>>(result);
                     Userdata.insertarConsumos(results);
+                    alog.estado = "Insertado";
+
+                }
+                else
+                {
+                    alog.estado = "No hay consumos este dia";
 
                 }
 
             }
+            else
+            {
+                alog.estado = "Error en conexión con la api";
 
+            }
+
+            Userdata.insertLog(alog);
         }
     }
 

@@ -128,6 +128,7 @@
     <Compile Include="Controllers\CargarCSVAsistenciaController.cs" />
     <Compile Include="Controllers\CargarCSVController.cs" />
     <Compile Include="Controllers\DeviceController.cs" />
+    <Compile Include="Controllers\PromedioMensualConsumoController.cs" />
     <Compile Include="Controllers\SensorsController.cs" />
     <Compile Include="Controllers\MedicionSensoresController.cs" />
     <Compile Include="Controllers\PromedioAnualAlumnoController.cs" />
@@ -152,6 +153,9 @@
     </Compile>
     <Compile Include="Models\Asistencia.cs" />
     <Compile Include="Models\Consumo.cs" />
+    <Compile Include="Models\ConsumoBoletin.cs" />
+    <Compile Include="Models\ConsumoBoletinError.cs" />
+    <Compile Include="Models\Log.cs" />
     <Compile Include="Models\promediosSensores.cs" />
     <Compile Include="Models\SensorABM.cs" />
     <Compile Include="Models\Materia.cs" />
