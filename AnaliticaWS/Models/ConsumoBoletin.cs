@@ -12,5 +12,6 @@ namespace AnaliticaWS.Models
         public string promedio;
         public string nombreArea;
         public string nombreInstitucion;
+        public string tipoDispositivo;
     }
 }

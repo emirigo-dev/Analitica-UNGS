@@ -621,6 +621,50 @@ namespace AnaliticaWS.Data
             }
         }
 
+        public static MedicionPortal getConsumoPortal(string institucion, string tipo, string tiempo) {
+
+            MedicionPortal mp = new MedicionPortal();
+
+
+            MySqlConnection connect = new MySqlConnection();
+            connect.ConnectionString = Connection.getConnection();
+            connect.Open();
+
+            MySqlCommand cmd = new MySqlCommand("getMediciones", connect);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("INSTITUCION", institucion);
+            cmd.Parameters.AddWithValue("TIPO", tipo);
+            cmd.Parameters.AddWithValue("TIEMPO", tiempo);
+            try
+            {
+
+                cmd.ExecuteNonQuery();
+                using (MySqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read()) { 
+                        mp.TipoMedida = dr["TipoMedida"].ToString();
+                        mp.UnidadMedida = dr["UnidadMedida"].ToString();
+                        mp.Promedio = dr["Promedio"].ToString();
+                    }
+                }
+
+                mp.statusCode = 200;
+                mp.message = "Ok";
+                mp.hasError = false;
+                return mp;
+
+            }
+            catch (Exception ex)
+            {
+
+                mp.statusCode = 404;
+                mp.message = ex.Message;
+                mp.hasError = true;
+                return mp;
+            }
+
+        }
+
         public static ConsumoBoletinError getConsumosMensaules(string institucion, string mes, string anio) {
 
             ConsumoBoletinError consumoData = new ConsumoBoletinError();
@@ -672,7 +716,8 @@ namespace AnaliticaWS.Data
                             nombreDispositivo = dr["Nombre"].ToString(),
                             promedio = dr["Promedio"].ToString(),
                             nombreArea = dr["NombreArea"].ToString(),
-                            nombreInstitucion = dr["NombreInstitucion"].ToString()
+                            nombreInstitucion = dr["NombreInstitucion"].ToString(),
+                            tipoDispositivo = dr["TipoDispositivo"].ToString()
                         });
 
                     }

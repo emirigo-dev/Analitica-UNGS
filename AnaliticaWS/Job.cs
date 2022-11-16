@@ -26,7 +26,7 @@ namespace AnaliticaWS
             Log alog = new Log();
             alog.fecha = DateTime.Now;
             alog.proceso = "Mediciones hacia blockchain";
-            string url = "https://api-blockchain-production.up.railway.app/api/analitica?apiKey=b1a6a576d91d5796e";
+            string url = "https://ungs-coin.up.railway.app/api/analitica?apiKey=d8a9e05ec4ce62a72875";
             var client = new HttpClient();
             List<promediosSensores> prom = Userdata.getMedicionesPorDia();
             string json = "{ \"promediosSensores\":" + JsonConvert.SerializeObject(prom) + "}";
