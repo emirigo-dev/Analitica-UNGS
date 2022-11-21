@@ -9,8 +9,8 @@ namespace AnaliticaWS.Data
     {
         static string server = "pp1.ath.cx";
         static string bd = "analitica";
-        static string user = "Devs";
-        static string password = "Kadmio27977";
+        static string user = "root";
+        static string password = "Kerberos27977";
         static string port = "3306";
 
         static string connectionFull = "server=" + server + ";"+ "port=" + port + ";" + "user id=" + user + ";" + "password=" + password + ";" + "database=" + bd + ";";

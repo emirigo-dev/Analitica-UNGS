@@ -14,6 +14,7 @@ using System.Web.Http;
 using System.Text;
 using System.Web.UI;
 using System.Xml.Linq;
+using System.Runtime.Remoting.Contexts;
 
 namespace AnaliticaWS.Data
 {
@@ -46,10 +47,12 @@ namespace AnaliticaWS.Data
                         });
                     }
                 }
+                connect.Close();
                 return prom;
             }
             catch (Exception ex)
             {
+                connect.Close();
                 return prom;
             }
 
@@ -84,10 +87,12 @@ namespace AnaliticaWS.Data
                         });
                     }
                 }
+                connect.Close();
                 return prom;
             }
             catch (Exception ex)
             {
+                connect.Close();
                 return prom;
             }
 
@@ -120,10 +125,12 @@ namespace AnaliticaWS.Data
                         });
                     }
                 }
+                connect.Close();
                 return prom;
             }
             catch (Exception ex)
             {
+                connect.Close();
                 return prom;
             }
 
@@ -167,6 +174,7 @@ namespace AnaliticaWS.Data
                         
                     
                 }
+                connect.Close();
                 if (prom.Count > 0) {
                     return prom;
                 }
@@ -177,6 +185,7 @@ namespace AnaliticaWS.Data
             }
             catch (Exception ex)
             {
+                connect.Close();
                 return prom;
             }
 
@@ -219,8 +228,9 @@ namespace AnaliticaWS.Data
                         PromedioAnio.Nombre = dr["FULLNAME"].ToString();
                     }
                     PromedioAnio.Materias = mat;
-                    
 
+
+                    connect.Close();
 
 
                 }
@@ -236,6 +246,7 @@ namespace AnaliticaWS.Data
             }
             catch (Exception ex)
             {
+                connect.Close();
                 return PromedioAnio;
             }
 
@@ -259,6 +270,7 @@ namespace AnaliticaWS.Data
                 err.statusCode = 200;
                 err.message = "Sensor eliminado";
                 err.hasError = false;
+                connect.Close();
                 return err;
             }
             catch (Exception ex)
@@ -266,6 +278,7 @@ namespace AnaliticaWS.Data
                 err.statusCode = 404;
                 err.message = ex.Message;
                 err.hasError = true;
+                connect.Close();
                 return err;
             }
 
@@ -313,6 +326,7 @@ namespace AnaliticaWS.Data
                 sensor.statusCode = 200;
                 sensor.message = "Sensor insertada/actualizada";
                 sensor.hasError = false;
+                connect.Close();
                 return sensor;
             }
             catch (Exception ex)
@@ -321,6 +335,7 @@ namespace AnaliticaWS.Data
                 sensor.statusCode = 404;
                 sensor.message = ex.Message;
                 sensor.hasError = true;
+                connect.Close();
                 return sensor;
             }
         
@@ -374,6 +389,7 @@ namespace AnaliticaWS.Data
                 message.StatusCode = 200;
                 message.Message = "Medicion insertada";
                 message.HasError = false;
+                connect.Close();
                 return message;
             }
             catch (Exception ex)
@@ -382,6 +398,7 @@ namespace AnaliticaWS.Data
                 message.StatusCode = 404;
                 message.Message = ex.Message;
                 message.HasError = true;
+                connect.Close();
                 return message;
             }
         }
@@ -439,6 +456,7 @@ namespace AnaliticaWS.Data
                 sensor.statusCode = 200;
                 sensor.message = "Dispositivo insertado/actualizado";
                 sensor.hasError = false;
+                connect.Close();
                 return sensor;
             }
             catch (Exception ex)
@@ -447,6 +465,7 @@ namespace AnaliticaWS.Data
                 sensor.statusCode = 404;
                 sensor.message = ex.Message;
                 sensor.hasError = true;
+                connect.Close();
                 return sensor;
             }
 
@@ -470,6 +489,7 @@ namespace AnaliticaWS.Data
                 err.statusCode = 200;
                 err.message = "Dispositivo eliminado";
                 err.hasError = false;
+                connect.Close();
                 return err;
             }
             catch (Exception ex)
@@ -477,6 +497,7 @@ namespace AnaliticaWS.Data
                 err.statusCode = 404;
                 err.message = ex.Message;
                 err.hasError = true;
+                connect.Close();
                 return err;
             }
 
@@ -523,12 +544,13 @@ namespace AnaliticaWS.Data
 
 
                 }
-            
-                Console.WriteLine(promediosSensores);
+
+                connect.Close();
                 return promediosSensores;
             }
             catch (Exception ex)
             {
+                connect.Close();
                 return promediosSensores;
             }
         }
@@ -597,6 +619,7 @@ namespace AnaliticaWS.Data
                        
                     });
                 }
+                connect.Close();
                 if (prom.Count != 0)
                 {
                     prom[0].Mensaje = "Ok.";
@@ -612,6 +635,7 @@ namespace AnaliticaWS.Data
             }
             catch (Exception ex)
             {
+                connect.Close();
                 prom.Add(new PromedioWithParameters()
                 {
                     Mensaje = "No se encontro notas para los parametros indicados",
@@ -651,6 +675,7 @@ namespace AnaliticaWS.Data
                 mp.statusCode = 200;
                 mp.message = "Ok";
                 mp.hasError = false;
+                connect.Close();
                 return mp;
 
             }
@@ -660,6 +685,7 @@ namespace AnaliticaWS.Data
                 mp.statusCode = 404;
                 mp.message = ex.Message;
                 mp.hasError = true;
+                connect.Close();
                 return mp;
             }
 
@@ -726,6 +752,7 @@ namespace AnaliticaWS.Data
                 consumoData.statusCode = 200;
                 consumoData.message = "Ok";
                 consumoData.hasError = false;
+                connect.Close();
                 return consumoData;
 
             }
@@ -735,16 +762,18 @@ namespace AnaliticaWS.Data
                 consumoData.statusCode = 404;
                 consumoData.message = ex.Message;
                 consumoData.hasError = true;
+                connect.Close();
                 return consumoData;
             }
 
         }
         public static void insertLog(Log alog) {
+            MySqlConnection connect = new MySqlConnection();
+            connect.ConnectionString = Connection.getConnection();
+
             try
             {
-                MySqlConnection connect = new MySqlConnection();
-                connect.ConnectionString = Connection.getConnection();
-
+               
                 StringBuilder sCommand = new StringBuilder("INSERT IGNORE INTO log (PROCESO, ESTADO, FECHAHORA) VALUES ");
                 using (MySqlConnection mConnection = new MySqlConnection(connect.ConnectionString))
 
@@ -763,17 +792,20 @@ namespace AnaliticaWS.Data
                     }
 
                 }
+                connect.Close();
             }
             catch (Exception e)
             {
+                connect.Close();
             }
 
         }
         public static void insertarConsumos(List<Consumo> consumos) {
+            MySqlConnection connect = new MySqlConnection();
+            connect.ConnectionString = Connection.getConnection();
             try
             {
-                MySqlConnection connect = new MySqlConnection();
-                connect.ConnectionString = Connection.getConnection();
+               
 
                 StringBuilder sCommand = new StringBuilder("INSERT IGNORE INTO consumo (ID_DISPOSITIVO, VALOR, FECHA) VALUES ");
                 using (MySqlConnection mConnection = new MySqlConnection(connect.ConnectionString))
@@ -797,18 +829,22 @@ namespace AnaliticaWS.Data
                     }
 
                 }
+                connect.Close();
             }
             catch (Exception e)
             {
+                connect.Close();
             }
         }
         public static Boolean BulkToUpdateAsistenciaMySQL(List<Asistencia> asistencias) {
-           
+
+
+            MySqlConnection connect = new MySqlConnection();
+            connect.ConnectionString = Connection.getConnection();
 
             try
             {
-                MySqlConnection connect = new MySqlConnection();
-                connect.ConnectionString = Connection.getConnection();
+               
                 
                 StringBuilder sCommand = new StringBuilder("INSERT IGNORE INTO cursada_alumno (ID, LEGAJO_ALUMNO, ID_CURSADA, ASISTENCIA) VALUES ");
                 using (MySqlConnection mConnection = new MySqlConnection(connect.ConnectionString))
@@ -846,11 +882,13 @@ namespace AnaliticaWS.Data
 
                 }
 
+                connect.Close();
                 return false;
 
             }
             catch (Exception e)
             {
+                connect.Close();
                 return true;
             }
 
@@ -858,9 +896,11 @@ namespace AnaliticaWS.Data
 
         public static Boolean BulkToMySQL(List<NotasDTO> notas)
         {
+            MySqlConnection connect = new MySqlConnection();
+            connect.ConnectionString = Connection.getConnection();
+
             try {
-                MySqlConnection connect = new MySqlConnection();
-                connect.ConnectionString = Connection.getConnection();
+               
                 StringBuilder sCommand = new StringBuilder("INSERT IGNORE INTO nota (LEGAJO_ALUMNO, ID_CURSADA, VALOR) VALUES ");
                 using (MySqlConnection mConnection = new MySqlConnection(connect.ConnectionString))
                 {
@@ -882,9 +922,11 @@ namespace AnaliticaWS.Data
                    
                 }
 
+                connect.Close();
                 return false;
 
             } catch (Exception e){
+                connect.Close();
                 return true;
             }
          
